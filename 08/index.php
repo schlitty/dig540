@@ -11,6 +11,7 @@
   <body>
     <h1>Hello, world!</h1>
 
+<<<<<<< HEAD
     <?php
     error_reporting(E_ALL); 
     ini_set("display_errors", 1);?>
@@ -51,6 +52,9 @@
         
     fclose($file_handle);
 ?>
+=======
+    Insert PHP for displaying album data here!
+>>>>>>> b5ad721b1736a867a391929468e9e089cbc46170
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
