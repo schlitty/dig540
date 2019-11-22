@@ -43,7 +43,7 @@
             $this->setSubgenres($data_row[5]);
         }
         public function getData(){
-            $this->getArtist
+            $this->getArtist;
             $this->getTitle();
             $this->getYear();
             $this->getRank();
