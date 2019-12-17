@@ -14,7 +14,7 @@
     <?php
     error_reporting(E_ALL); 
     ini_set("display_errors", 1);?>
-<div><p>
+
     <?php
     $file_handle = fopen('./participants.csv', 'r');
     $first_line = fgetcsv($file_handle);
@@ -39,7 +39,7 @@
                 for($j=0; $j<count($programs); $j++)
                 
     
-                }
+            
             }
         }
         print_r('</p>');
