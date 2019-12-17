@@ -37,10 +37,7 @@
             else {
                 $program = str_getcsv($data_row[$i]);
                 for($j=0; $j<count($programs); $j++)
-                
-    
-            
-            }
+               
         }
         print_r('</p>');
 
