@@ -2,7 +2,7 @@
 $host = 'localhost:3306';
 $db = 'schlitty_chewonki';
 $user = 'schlitty_diguser';
-$pass = '^cY0A6Hp-b)n';
+$pass = 'Calvin';
 $charset = 'utf8';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

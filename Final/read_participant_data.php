@@ -5,7 +5,7 @@
     include_once("./includes/participant.php");
 
     //Open the file
-    $file_handle = fopen('./participantlist.csv', 'r');
+    $file_handle = fopen('./participants.csv', 'r');
 
     //Read the first line (which is the row of headers)
     $first_line = fgetcsv($file_handle);

@@ -17,18 +17,18 @@ class Participant{
     public function getRank(){ print_r('Rank: '.$this->rank . '<br>'); }
     public function setYear($birthYear){ $this->year = $birthYear; }
     public function getYear(){ print_r('Year: '.$this->year . '<br>'); }
-    public function setState($stateState){ $this->year = $stateState; }
+    public function setState($stateState){ $this->state = $stateState; }
     public function getState(){ print_r('State: '.$this->state . '<br>'); }
     public function setprograms($programs){ 
         $this->programs = str_getcsv($programs);
     }
     public function getprograms(){ 
         for($j=0; $j<count($this->programs); $j++){
-            print_r('<a href="list_participants.php?program='.$this->programs[$j].'">program #'.($j+1).' is '.$this->programs[$j].'</a><br>');
+            print_r('<a href="participants.php?program='.$this->programs[$j].'">program #'.($j+1).' is '.$this->programs[$j].'</a><br>');
         }
     }
      public function getgenderLink(){
-        $anchor = '<a href="show_participant.php?id='.$this->id.'">'.$this->gender.'</a>';
+        $anchor = '<a href="show_participants.php?id='.$this->id.'">'.$this->gender.'</a>';
         print_r($this->rank . ': '. $anchor . ' by ' . $this->name . '<br>');
     }
 
@@ -41,12 +41,12 @@ class Participant{
         //                         year=1
         //                         program=4
         //                         state=5
-        $this->setName($data_row[3]);
+        $this->setName($data_row[1]);
         $this->setGender($data_row[2]);
         $this->setRank($data_row[0]);
-        $this->setYear($data_row[1]);
-        $this->setPrograms($data_row[4]);
-        $this->setState($data_row[5]);
+        $this->setYear($data_row[3]);
+        $this->setPrograms($data_row[5]);
+        $this->setState($data_row[4]);
     }
 
     //->getData runs all the getX methods (which print out the data for each property)
@@ -63,11 +63,11 @@ class Participant{
         global $pdo;
 
         try{
-            $participant_insert = $pdo->prepare("INSERT INTO participant (number, year, gender, name, state)
+            $participant_insert = $pdo->prepare("INSERT INTO participant (number, name, gender, year, state)
                                             VALUES (?, ?, ?, ?, ?)");
-            $db_participant = $participant_insert->execute([$this->rank, $this->year, $this->gender, $this->name, $this->state]);
+            $db_participant = $participant_insert->execute([$this->rank, $this->name, $this->gender, $this->year, $this->state]);
             $this->id = $pdo->lastInsertId();
-            print_r("--Saved $this->gender to the database.--<br>\n");
+            print_r("--Saved $this->name to the database.--<br>\n");
 
             $select_program = $pdo->prepare("SELECT * FROM program WHERE name = ?");
             $program_insert = $pdo->prepare("INSERT INTO program (name) VALUES (?)");
@@ -83,7 +83,7 @@ class Participant{
                     $program_id = $existing_program['id'];
                 }
                 $program_link->execute([$this->id, $program_id]);
-                print_r("Connected ".$this->programs[$i]." to $this->gender<br>\n");
+                print_r("Connected ".$this->programs[$i]." to $this->name<br>\n");
             }
             flush();
             ob_flush();
@@ -102,7 +102,7 @@ class Participant{
             $select_program = $pdo->prepare("SELECT program.name AS name
                                                 FROM participant_program, program
                                                 WHERE participant_program.participant_id = ?
-                                                AND participant_program.program_id = program.id");
+                                                AND participant_program.program_id = program_id");
             $find_participant->execute([$id]);
             $db_participant = $find_participant->fetch();
             if(!$db_participant){
@@ -142,7 +142,7 @@ class Participant{
             } else {
                 $select_participants = $pdo->prepare("SELECT participant.* FROM participant, participant_program, program
                                                 WHERE participant.id = participant_program.participant_id AND
-                                                  participant_program.program_id = program.id AND
+                                                  participant_program.program_id = program_id AND
                                                   program.name = ?
                                                 ORDER BY participant.number ASC");
                 $select_participants->execute([$program]);
@@ -151,7 +151,7 @@ class Participant{
             $select_program = $pdo->prepare("SELECT program.name AS name
                                             FROM participant_program, program
                                             WHERE participant_program.participant_id = ?
-                                              AND participant_program.program_id = program.id");
+                                              AND participant_program.program_id = program_id");
 
 
             $db_participants = $select_participants->fetchAll();
