@@ -9,28 +9,29 @@ class Participant{
     private $id;
 
     public function setID($dbID){ $this->id = $dbID; }
-    public function setname($nameName){ $this->name = $nameName; }
-    public function getname(){ print_r( 'name: '.$this->name . '<br>'); }
-    public function setgender($genderGender){ $this->gender = $genderGender; }
-    public function getgender(){ print_r('gender: '.$this->gender . '<br>'); }
+    public function setName($nameName){ $this->name = $nameName; }
+    public function getName(){ print_r( 'Name: '.$this->name . '<br>'); }
+    public function setGender($genderGender){ $this->gender = $genderGender; }
+    public function getGender(){ print_r('Gender: '.$this->gender . '<br>'); }
     public function setRank($rankNumber){ $this->rank = $rankNumber; }
     public function getRank(){ print_r('Rank: '.$this->rank . '<br>'); }
     public function setYear($birthYear){ $this->year = $birthYear; }
     public function getYear(){ print_r('Year: '.$this->year . '<br>'); }
     public function setState($stateState){ $this->state = $stateState; }
     public function getState(){ print_r('State: '.$this->state . '<br>'); }
-    public function setprograms($programs){ 
+    public function setPrograms($programs){ 
         $this->programs = str_getcsv($programs);
     }
-    public function getprograms(){ 
+    public function getPrograms(){ 
         for($j=0; $j<count($this->programs); $j++){
-            print_r('<a href="participants.php?program='.$this->programs[$j].'">program #'.($j+1).' is '.$this->programs[$j].'</a><br>');
+            print_r('<a href="list_participant.php?program='.$this->programs[$j].'">Program #'.($j+1).' is '.$this->programs[$j].'</a><br>');
         }
     }
-     public function getgenderLink(){
-        $anchor = '<a href="show_participants.php?id='.$this->id.'">'.$this->gender.'</a>';
-        print_r($this->rank . ': '. $anchor . ' by ' . $this->name . '<br>');
+     public function getNameLink(){
+        $anchor = '<a href="show_participant.php?id='.$this->id.'">'.$this->name.'</a>';
+        print_r($this->rank . '. '. $anchor . ' attended ' . $this->program . '<br>');
     }
+
 
     //->setData runs all the setX methods
     //$data_row is a single row of data from the csv passed as an array. Mappings are below.
@@ -51,12 +52,12 @@ class Participant{
 
     //->getData runs all the getX methods (which print out the data for each property)
     public function getData(){
-        $this->getGender();
-        $this->getYear();
         $this->getRank();
         $this->getName();
-        $this->getPrograms();
+        $this->getGender();
+        $this->getYear();
         $this->getState();
+        $this->getPrograms();
     }
 
     public function save(){
@@ -80,13 +81,13 @@ class Participant{
                     $db_program = $program_insert->execute([$this->programs[$i]]);
                     $program_id = $pdo->lastInsertID();
                 } else {
-                    $program_id = $existing_program['id'];
+                    $program_id = $existing_program['program_id'];
                 }
                 $program_link->execute([$this->id, $program_id]);
                 print_r("Connected ".$this->programs[$i]." to $this->name<br>\n");
             }
             flush();
-            ob_flush();
+            
         } catch (PDOException $e){
             print_r("Error saving participant to database: ".$e->getMessage() . "<br>\n");
             exit;
@@ -98,21 +99,21 @@ class Participant{
 
         try{
             $find_participant = $pdo->prepare("SELECT * FROM participant
-                                            WHERE id = ?");
+                                            WHERE participant_id = ?");
             $select_program = $pdo->prepare("SELECT program.name AS name
                                                 FROM participant_program, program
                                                 WHERE participant_program.participant_id = ?
-                                                AND participant_program.program_id = program_id");
+                                                AND participant_program.program_id = program.program_id");
             $find_participant->execute([$id]);
             $db_participant = $find_participant->fetch();
             if(!$db_participant){
                 return false;
             } else {
                 $participant = new participant();
-                $participant->setgender($db_participant['gender']);
-                $participant->setYear($db_participant['year']);
                 $participant->setRank($db_participant['number']);
                 $participant->setName($db_participant['name']);
+                $participant->setgender($db_participant['gender']);
+                $participant->setYear($db_participant['year']);
                 $participant->setState($db_participant['state']);
                 $participant->setID($id);
 
@@ -141,8 +142,8 @@ class Participant{
                 $select_participants->execute();
             } else {
                 $select_participants = $pdo->prepare("SELECT participant.* FROM participant, participant_program, program
-                                                WHERE participant.id = participant_program.participant_id AND
-                                                  participant_program.program_id = program_id AND
+                                                WHERE participant.participant_id = participant_program.participant_id AND
+                                                  participant_program.program_id = program.program_id AND
                                                   program.name = ?
                                                 ORDER BY participant.number ASC");
                 $select_participants->execute([$program]);
@@ -151,7 +152,7 @@ class Participant{
             $select_program = $pdo->prepare("SELECT program.name AS name
                                             FROM participant_program, program
                                             WHERE participant_program.participant_id = ?
-                                              AND participant_program.program_id = program_id");
+                                              AND participant_program.program_id = program.program_id");
 
 
             $db_participants = $select_participants->fetchAll();
@@ -163,7 +164,7 @@ class Participant{
                 $participant->setRank($db_participants[$i]['number']);
                 $participant->setName($db_participants[$i]['name']);
                 $participant->setState($db_participants[$i]['state']);
-                $participant->setID($db_participants[$i]['id']);
+                $participant->setID($db_participants[$i]['participant_id']);
 
                 $select_program->execute([$participant->id]);
                 $db_programs = $select_program->fetchAll();

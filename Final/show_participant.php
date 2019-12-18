@@ -25,7 +25,7 @@
     <h1>Here are all the participants in the database</h1>
     <?php
         if(!$participant){
-            print_r('Something went wrong. Either you did not specify an participant ID or the ID was not found.');
+            print_r('Something went wrong. Either you did not specify a participant ID or the ID was not found.');
         } else {
             print_r("<p>");
             $participant->getData();
