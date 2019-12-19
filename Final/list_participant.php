@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
   </head>
   <body>
-    <h1>Here is the participant</h1>
+    <h1>Here are the participants</h1>
     <?php
         //This loop iterates through the $participants array and prints out the data for each participant
         for($i=0; $i<count($participants); $i++){

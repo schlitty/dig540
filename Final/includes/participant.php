@@ -24,15 +24,14 @@ class Participant{
     }
     public function getPrograms(){ 
         for($j=0; $j<count($this->programs); $j++){
-            print_r('<a href="list_participant.php?program='.$this->programs[$j].'">Program #'.($j+1).' is '.$this->programs[$j].'</a><br>');
+            print_r('<a href="list_participant.php?program='.$this->programs[$j].'">Program #'.($j+1).' is '.$this->programs[$j].'</a><br><br>');
         }
     }
-     public function getNameLink(){
-        for($j=0; $j<count($this->name); $j++){
-        $anchor = '<a href="show_participant.php?id='.$this->id.'">'.$this->name.'</a>';
-        print_r($this->rank . '. '. $anchor . ' attended ' . $this->program . '<br>');
+    public function getNameLink(){
+        $anchor = '<a href="show_participant.php?id='.$this->id.'">'.$this->name.'</a><br>';
+        print_r($anchor);
+        $this->getPrograms();
     }
-}
 
     //->setData runs all the setX methods
     //$data_row is a single row of data from the csv passed as an array. Mappings are below.
