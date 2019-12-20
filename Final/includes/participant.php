@@ -1,6 +1,7 @@
 <?php
 class Participant{
     private $name;
+    private $image;
     private $gender;
     private $rank;
     private $year;
@@ -11,6 +12,8 @@ class Participant{
     public function setID($dbID){ $this->id = $dbID; }
     public function setName($nameName){ $this->name = $nameName; }
     public function getName(){ print_r( 'Name: '.$this->name . '<br>'); }
+    public function setImage($imageImage){ $this->image = $imageImage; }
+    public function getImage(){ print_r( 'Image: '.$this->image . '<br>'); }
     public function setGender($genderGender){ $this->gender = $genderGender; }
     public function getGender(){ print_r('Gender: '.$this->gender . '<br>'); }
     public function setRank($rankNumber){ $this->rank = $rankNumber; }
@@ -24,7 +27,7 @@ class Participant{
     }
     public function getPrograms(){ 
         for($j=0; $j<count($this->programs); $j++){
-            print_r('<a href="list_participant.php?program='.$this->programs[$j].'">Program #'.($j+1).' is '.$this->programs[$j].'</a><br><br>');
+            print_r('<a href="list_participant.php?program='.$this->programs[$j].'">Program #'.($j+1).' is '.$this->programs[$j].'</a><br>');
         }
     }
     public function getNameLink(){
@@ -32,7 +35,14 @@ class Participant{
         print_r($anchor);
         $this->getPrograms();
     }
-
+    public function getImages(){
+        $anchor = '<p>
+        <b>Image:</b> <?php echo $image;?><br>
+        <img src="<?php echo $image;?>">
+        </p>';
+        print_r($anchor);
+        $this->getImages();
+    }
     //->setData runs all the setX methods
     //$data_row is a single row of data from the csv passed as an array. Mappings are below.
     public function setData($data_row){
@@ -43,17 +53,19 @@ class Participant{
         //                         program=4
         //                         state=5
         $this->setName($data_row[1]);
-        $this->setGender($data_row[2]);
+        $this->setGender($data_row[3]);
+        $this->setImages($data_row[2]);
         $this->setRank($data_row[0]);
-        $this->setYear($data_row[3]);
-        $this->setPrograms($data_row[5]);
-        $this->setState($data_row[4]);
-    }
+        $this->setYear($data_row[4]);
+        $this->setPrograms($data_row[6]);
+        $this->setState($data_row[5]);
+}
 
     //->getData runs all the getX methods (which print out the data for each property)
     public function getData(){
         $this->getRank();
         $this->getName();
+        $this->getImages();
         $this->getGender();
         $this->getYear();
         $this->getState();
