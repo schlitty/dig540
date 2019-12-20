@@ -54,7 +54,7 @@ class Participant{
         //                         state=5
         $this->setName($data_row[1]);
         $this->setGender($data_row[3]);
-        $this->setImages($data_row[2]);
+        $this->setImage($data_row[2]);
         $this->setRank($data_row[0]);
         $this->setYear($data_row[4]);
         $this->setPrograms($data_row[6]);
@@ -65,7 +65,7 @@ class Participant{
     public function getData(){
         $this->getRank();
         $this->getName();
-        $this->getImages();
+        $this->getImage();
         $this->getGender();
         $this->getYear();
         $this->getState();
@@ -124,6 +124,7 @@ class Participant{
                 $participant = new participant();
                 $participant->setRank($db_participant['number']);
                 $participant->setName($db_participant['name']);
+                $participant->setImage($db_participant['image']);
                 $participant->setgender($db_participant['gender']);
                 $participant->setYear($db_participant['year']);
                 $participant->setState($db_participant['state']);
@@ -172,11 +173,13 @@ class Participant{
             for($i=0; $i<count($db_participants); $i++){
                 $participant = new participant();
                 $participant->setGender($db_participants[$i]['gender']);
+                $participant->setImage($db_participants[$i]['image']);
                 $participant->setYear($db_participants[$i]['year']);
                 $participant->setRank($db_participants[$i]['number']);
                 $participant->setName($db_participants[$i]['name']);
                 $participant->setState($db_participants[$i]['state']);
                 $participant->setID($db_participants[$i]['participant_id']);
+
 
                 $select_program->execute([$participant->id]);
                 $db_programs = $select_program->fetchAll();
