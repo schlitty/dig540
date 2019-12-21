@@ -38,7 +38,7 @@ class Participant{
     public function getImages(){
         $anchor = '<p>
         <b>Image:</b> <?php echo $image;?><br>
-        <img src="<?php echo $image;?>">
+        <img src=<?php echo $image;?>">
         </p>';
         print_r($anchor);
         $this->getImages();
